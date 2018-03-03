@@ -24,15 +24,27 @@ def main(args):
         for row in reader:
             entries.append(row)
 
+    heading = entries.pop(0) #pull the header off the list.
+    row_length = len(heading)
+    row_index = row_length - 1
+    newheading = []
+    newheading.append('Date')
+
     outries = []
-    outries.append(['Date', 'Pedestrian', 'Cyclists'])
-    toss_it = entries.pop(0) #pull the header off the list.
-                             #probably a bad assumption and should test.
+    for i in range(2, row_length):
+        newheading.append(heading[i])
+
+    outries.append(newheading)
+
     for entry in entries:
         parsed_date = datetime.datetime.strptime(str(entry[0]) + ' ' \
                                                  + str(entry[1]), \
                                                  dateformat)
-        outries.append([parsed_date, entry[2], entry[3]])
+        output_row = []
+        output_row.append(parsed_date)
+        for i in range(2, row_length):
+            output_row.append(entry[i])
+        outries.append(output_row)
 
     with open(args.output, 'w', newline='') as csv_outfile:
         writer = csv.writer(csv_outfile)
